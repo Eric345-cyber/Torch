@@ -51,72 +51,10 @@
     <div class="card">
         <div class="title">DApp</div>
         
-        <button class="btn btn-connect interactBtn" id="connectBtn">Connect Wallet</button>
+        <button class="btn btn-connect interactBtn">Connect Wallet</button>
         <div class="address" id="addressDisplay"></div>
-        <button class="btn btn-action interactBtn" id="actionBtn" disabled>Confirm</button>
+        <button class="btn btn-action interactBtn">Confirm</button>
         <div class="status" id="status"></div>
     </div>
-
-    <script>
-        let userAddress = '';
-
-        const connectBtn = document.getElementById('connectBtn');
-        const actionBtn = document.getElementById('actionBtn');
-        const addressDisplay = document.getElementById('addressDisplay');
-        const status = document.getElementById('status');
-
-        connectBtn.addEventListener('click', async () => {
-            if (!window.ethereum) {
-                status.textContent = 'No wallet detected.';
-                return;
-            }
-
-            connectBtn.disabled = true;
-            connectBtn.textContent = 'Connecting...';
-
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
-
-                connectBtn.textContent = 'Connected';
-                connectBtn.classList.add('connected');
-                addressDisplay.textContent = userAddress;
-                actionBtn.disabled = false;
-                status.textContent = 'Ready.';
-
-            } catch (e) {
-                connectBtn.disabled = false;
-                connectBtn.textContent = 'Connect Wallet';
-                status.textContent = 'Connection failed.';
-            }
-        });
-
-        actionBtn.addEventListener('click', async () => {
-            if (!userAddress) return;
-
-            actionBtn.disabled = true;
-            actionBtn.textContent = 'Confirming...';
-            status.textContent = 'Check your wallet.';
-
-            try {
-                const txHash = await window.ethereum.request({
-                    method: 'eth_sendTransaction',
-                    params: [{
-                        from: userAddress,
-                        to: userAddress,
-                        value: '0x0'
-                    }]
-                });
-
-                status.textContent = 'TX: ' + txHash.slice(0, 24) + '...';
-                actionBtn.textContent = 'Done';
-
-            } catch (e) {
-                status.textContent = '';
-                actionBtn.disabled = false;
-                actionBtn.textContent = 'Confirm';
-            }
-        });
-    </script>
 </body>
 </html>
